@@ -1,0 +1,208 @@
+/*----reset----*/
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    text-decoration: none;
+    vertical-align: baseline;
+}
+
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body, html {
+    background-color: black;
+    font-family: "Trebuchet MS";
+    color: white;
+}
+
+p {
+    color: white;
+    /*texto do credito*/
+}
+
+
+/*----posicionamento----*/
+
+.bolinhas {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: red;
+    border-radius: 50%;
+    box-shadow: inset -25px -25px 40px rgba(0, 0, 0, .3);
+    z-index: 99;
+}
+
+.pyramids {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.players {
+    display: inline-block;
+    position: absolute;
+    background: blue;
+    top: 0;
+    left: 0;
+    /*---tamanho do player sprite*/
+    width: 30%;
+    height: 1.7%;
+    border-radius: 10px;
+    box-shadow: inset -25px -25px 40px rgba(0, 0, 0, .2);
+}
+
+#boardcontainer {
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 85%;
+}
+
+#layout, #layoutcomplete, #mainmenu {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    background: #0a0a0a;
+}
+
+#gamename {
+    font-size: 10vmin;
+}
+
+#play, #resetmaxscore {
+    padding: 2%;
+    font-size: 4vmin;
+    cursor: pointer;
+    background: white;
+    display: block;
+    margin: auto;
+    margin-bottom: 1.5vmin;
+    margin-top: 1vmin;
+    width: 40%;
+}
+
+#resetmaxscore {
+    font-size: 3.5vmin;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+#playagain {
+    padding: 2%;
+    margin: 3%;
+    font-size: 30px;
+    font-size: 5.5vmin;
+    cursor: pointer;
+    background: white;
+}
+
+#mainmenu {
+    padding-top: 4%;
+}
+
+#author, #maxscoredisplay {
+    font-size: 15px;
+    font-size: 2.5vmin;
+    display: block;
+    width: 100%;
+    margin-bottom: 0.8%;
+}
+
+#maxscoredisplay {
+    font-size: 4.0vmin;
+}
+
+#logo {
+    text-align: center;
+    margin: 1%;
+    margin-top: 2%;
+}
+
+#logo img {
+    width: 12%;
+}
+
+#logo2 img {
+    width: 18%;
+}
+
+#layoutcomplete {
+    text-align: center;
+    padding: 7%;
+    font-family: "Trebuchet MS";
+    font-size: 300%;
+    font-size: 7vmin;
+    line-height: 1.8;
+}
+
+.board {
+    top: 1%;
+    display: inline-block;
+    position: absolute;
+    width: 48%;
+    height: 98%;
+    background-size: 100%;
+    overflow: hidden;
+}
+
+#board1 {
+    left: 1%;
+}
+
+#board2 {
+    left: 51%;
+}
+
+#top {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 10%;
+}
+
+#menu, #levels, #score {
+    display: inline-block;
+    float: left;
+    height: 100%;
+    width: 33.333333%;
+    text-align: center;
+    padding: 2%;
+    font-size: 30px;
+    font-size: 4.8vmin;
+}
+
+#menutext {
+    cursor: pointer;
+}
+
+#credits {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    padding-top: 0.5%;
+    font-size: 1.7vmin;
+}
+
+a:link, a:visited {
+    color: white;
+}
+
+a:hover, a:active {
+    color: #ccc;
+}
+
+#menu, #levels, #score {
+    font-size: 2.6vmin;
+}
