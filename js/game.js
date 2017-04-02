@@ -47,7 +47,6 @@
     var exibeEscondePlayer = function() {
         if ((window.innerWidth < 1024)) {
             gameLibs.MovColis.deleteObject(player1.id, "board1");
-            gameProperties.velocidadeBolinhas = 20;
         } else {
             criaPlayer(1);
         }
@@ -379,12 +378,14 @@
                         else gameLibs.MovColis.deleteObject(someBall.id, "board2");
                     }
                 } //fim do for que exclui todas as bolinhas
-                //recria bolinhas
+                //recria bolinhas - aproveita a 'verificação mobile' e dá um incremento de velocidade de acordo
                 gameLibs.MovColis.createDOMElements(gameProperties.qtdeBolinhas, "div", "bolinha", "objeto bolinhas", "vertical", "down", "board1", 1);
                 if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
                     gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+                    gameProperties.velocidadeBolinhas += 20;
                 } else {
                     gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
+                    gameProperties.velocidadeBolinhas += 5;
                 }
                 gameLibs.MovColis.spreadInX("bolinhas", gameProperties.spreadYPercentage, "board1", gameProperties.spreadWithinPercentage);
 
@@ -394,8 +395,7 @@
                 playingBall = document.getElementById("bolinha" + ballIndex);
                 playingBall.movement = gameLibs.MovColis.keepMoving;
 
-                //aumenta a velocidade das bolinhas
-                gameProperties.velocidadeBolinhas += 20;
+
 
                 gameProperties.velocidadePlayer += 10;
 
