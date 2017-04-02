@@ -18,7 +18,7 @@
         layoutHeight: 768,
         //variáveis do jogo
         playing: true,
-        qtdeBolinhas: 25,
+        qtdeBolinhas: 5,
         velocidadeBolinhas: 100,
         qtdeNiveis: 100,
         velocidadePlayer: 600,
@@ -47,6 +47,7 @@
     var exibeEscondePlayer = function() {
         if ((window.innerWidth < 1024)) {
             gameLibs.MovColis.deleteObject(player1.id, "board1");
+            gameProperties.velocidadeBolinhas = 20;
         } else {
             criaPlayer(1);
         }
