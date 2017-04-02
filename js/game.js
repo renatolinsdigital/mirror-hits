@@ -19,7 +19,7 @@
         //variáveis do jogo
         playing: true,
         qtdeBolinhas: 5,
-        velocidadeBolinhas: 100,
+        velocidadeBolinhas: 300,
         qtdeNiveis: 100,
         velocidadePlayer: 600,
         nivelAtual: 1,
@@ -382,10 +382,10 @@
                 gameLibs.MovColis.createDOMElements(gameProperties.qtdeBolinhas, "div", "bolinha", "objeto bolinhas", "vertical", "down", "board1", 1);
                 if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
                     gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
-                    gameProperties.velocidadeBolinhas += 20;
+                    gameProperties.velocidadeBolinhas += 7;
                 } else {
                     gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
-                    gameProperties.velocidadeBolinhas += 5;
+                    gameProperties.velocidadeBolinhas += 4;
                 }
                 gameLibs.MovColis.spreadInX("bolinhas", gameProperties.spreadYPercentage, "board1", gameProperties.spreadWithinPercentage);
 
