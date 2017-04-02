@@ -7,16 +7,18 @@ prototype: define public static stuff
 this: define public and instance stuff
 */
 
-var MovColis = function() { //library starts with a standard constructor ( in this case a named function)
+/*jslint browser: true*/
+/*jslint vars: true*/
+
+var MovColis = function () { //library starts with a standard constructor ( in this case a named function)
     "use strict";
 
     var keys = []; //empty array to hold key values
-
     //once the library is instantiated, it will attach listeners to body for dealing with keys
-    document.body.addEventListener("keydown", function(e) {
+    document.body.addEventListener("keydown", function (e) {
         keys[e.keyCode] = true; //array has named indexes(same as key codes)
     });
-    document.body.addEventListener("keyup", function(e) {
+    document.body.addEventListener("keyup", function (e) {
         keys[e.keyCode] = false;
     });
 
@@ -24,35 +26,34 @@ var MovColis = function() { //library starts with a standard constructor ( in th
     MovColis.prototype.gameObjects = {}; //written with prototype('static-like') instead of this.gameObjects because this must be static
 
     //Getters and Setters to be used within the Lybrary (private)
-    var getY = function(obj) {
-            return (obj.style.top)
+    var getY = function (obj) {
+            return (obj.style.top);
         },
-        getX = function(obj) {
-            return (obj.style.left)
+        getX = function (obj) {
+            return (obj.style.left);
         },
-        setY = function(obj, y) {
+        setY = function (obj, y) {
             obj.style.top = y + "px";
         },
-        setX = function(obj, x) {
+        setX = function (obj, x) {
             obj.style.left = x + "px";
         },
-        getWidth = function(obj) {
-            return (obj.width || obj.clientWidth)
+        getWidth = function (obj) {
+            return (obj.width || obj.clientWidth);
         },
-        getHeight = function(obj) {
-            return (obj.height || obj.clientHeight)
+        getHeight = function (obj) {
+            return (obj.height || obj.clientHeight);
         };
 
-    //redefine positions percentage. will happen ONLY when objects move for repositioning purposes
-    //This is also a private method
-    var redefinePositionPercentage = function(obj, layout) {
-
-        var layoutWidth = parseInt(window.getComputedStyle(layout, null).getPropertyValue("width")),
-            layoutHeight = parseInt(window.getComputedStyle(layout, null).getPropertyValue("height")),
-            elementLeft = parseInt(window.getComputedStyle(obj, null).getPropertyValue("left")),
-            elementTop = parseInt(window.getComputedStyle(obj, null).getPropertyValue("top")),
-            elementWidth = parseInt(window.getComputedStyle(obj, null).getPropertyValue("width")),
-            elementHeight = parseInt(window.getComputedStyle(obj, null).getPropertyValue("height"));
+    //Redefine position percentages. will happen ONLY when objects move for repositioning purposes
+    //This is also a 'private-like' method
+    var redefinePositionPercentage = function (obj, layout) {
+        var layoutWidth = parseInt(window.getComputedStyle(layout, null).getPropertyValue("width"), 10),
+            layoutHeight = parseInt(window.getComputedStyle(layout, null).getPropertyValue("height"), 10),
+            elementLeft = parseInt(window.getComputedStyle(obj, null).getPropertyValue("left"), 10),
+            elementTop = parseInt(window.getComputedStyle(obj, null).getPropertyValue("top"), 10),
+            elementWidth = parseInt(window.getComputedStyle(obj, null).getPropertyValue("width"), 10),
+            elementHeight = parseInt(window.getComputedStyle(obj, null).getPropertyValue("height"), 10);
         obj.xPercentage = (elementLeft / layoutWidth) * 100;
         obj.yPercentage = (elementTop / layoutHeight) * 100;
 
@@ -63,7 +64,7 @@ var MovColis = function() { //library starts with a standard constructor ( in th
     }
 
     //basic movement function (Will be an instance function, thats why we use this)
-    this.arrowMove = function(layoutName, deltaTime, pixelsPerSecond) {
+    this.arrowMove = function (layoutName, deltaTime, pixelsPerSecond) {
 
         var moveDistance = ((deltaTime * pixelsPerSecond) / 1000);
 

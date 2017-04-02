@@ -1,4 +1,4 @@
-(function() {
+(function () {
     "use strict";
 
     /*=================Declarações Globais==================*/
@@ -19,7 +19,7 @@
         //variáveis do jogo
         playing: true,
         qtdeBolinhas: 5,
-        velocidadeBolinhas: 300,
+        velocidadeBolinhas: 250,
         qtdeNiveis: 100,
         velocidadePlayer: 600,
         nivelAtual: 1,
@@ -68,7 +68,7 @@
     var canPlayOgg = supportsOgg(),
         canPlayM4a = supportsM4a();
 
-    //damos preferencia à reprodução do formato ogg
+    //dando preferencia a reprodução do formato ogg
     if (canPlayOgg) {
         var startSound = new Audio("sound/start.ogg"),
             ballLaunch = new Audio("sound/ball_launch.ogg"),
@@ -107,6 +107,18 @@
         gameLibs.MovColis.positionByPercentage("player1", "board1", "none");
         player1.movement = gameLibs.MovColis.arrowMove; //MÁGICA: Injeta Função/Comportamento de movimentação no player
         player1.moveLimit = gameLibs.MovColis.boundToLayout; //injeta detecção de limites
+    }
+
+    //define tamanho da div - todos os elementos da classe BOLINHA terão 8% de largura e serão quadrados.
+    //na versão mobile(onde não existe o player), as bolinhas serão maiores.
+    var defineBolinhas = function() {
+        if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
+            gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+            gameProperties.velocidadeBolinhas += 7;
+        } else {
+            gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
+            gameProperties.velocidadeBolinhas += 4;
+        }
     }
 
     /*========Funções Principais - Após o Carregamento do DOM========*/
@@ -159,14 +171,8 @@
 
         pyramid1.moveLimit = gameLibs.MovColis.boundToLayout; //garante que o objeto nunca sairá do layout
 
-        //define tamanho da div - todos os elementos da classe BOLINHA terão 8% de largura e serão quadrados.
-        //na versão mobile(onde não existe o player), as bolinhas serão maiores.
-
-        if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
-            gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
-        } else {
-            gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
-        }
+        //define inicialmente as bolinhas
+        defineBolinhas();
 
         //espalhando bolinhas no topo do layout
         //parâmetros: classe dos elementos que serão espalhados, porcentagem no topo, layout, porcentagem de uso
@@ -260,20 +266,15 @@
                             }
                         }
 
-                        //caso tenha sido uma colisão entra player e bolinha, uma bolinha é criada no board 2 e se moverá na horizontal
+                        //caso tenha sido uma colisão entra player e bolinha, uma bolinha é criada no board2 e se moverá na horizontal
                         if (colidiu1) {
                             getBall.play();
-                            //se esteamos jogando a bolinha 5 o ballIndex foi decrementado, logo uma bolinha com indice 5 será criada do outro lado com ballIndex+1
+                            //se estamos jogando a bolinha 5, o ballIndex foi decrementado. logo, uma bolinha com indice 5 será criada do outro lado com ballIndex+1
                             gameLibs.MovColis.createDOMElements(1, "div", "bolinha", "objeto bolinhas", "horizontal", "left", "board2", ballIndex + 1);
 
                             //define a bolinha que foi criada do outro lado e ajusta sua posição
                             var ballInTheOtherSide = document.getElementById("bolinha" + parseInt(ballIndex + 1));
-                            //reconstroi a definição visual das bolinhas
-                            if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
-                                gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
-                            } else {
-                                gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
-                            }
+                            defineBolinhas();
 
                             //ajusta percentualmente a posição da nova bolinha
                             ballInTheOtherSide.xPercentage = 100; //encostada no final do board2
@@ -292,11 +293,11 @@
 
                         if (totalBalls >= 1) ballLaunch.play(); //executa som ao chamar a próxima bolinha
 
-                    } //se a bola saiu ou colidiu1
+                    } //se a bolinha saiu ou colidiu1
 
                 } // se ballIndex >= 1
 
-                //enquanto houverem bolas no jogo
+                //enquanto houverem bolinhas no jogo
                 if (totalBalls >= 1) {
 
                     //verifica se alguma bola saiu do board2 ou se colidiu com a piramide
@@ -313,14 +314,14 @@
                                 //aproveita o loop pra pegar os pontos conforme o índice da bolinha
                                 gameProperties.pontos += gameProperties.ballPoints[i - 1];
 
-                                //envia a pontuação atual pra verificação de recorde, que será salvo caso supere a maxima pontuação anterior
+                                //envia a pontuação atual para verificação de recorde, que será salvo caso supere a máxima pontuação anterior
                                 setMaxScore(gameProperties.pontos);
 
                                 //atualiza a interface e vai pro próximo nível
                                 score.innerHTML = "Pontuação: " + gameProperties.pontos;
                                 proximoNivel();
 
-                            } //se colidiu com a piramide
+                            } //se colidiu com a pirâmide
 
                             //--Verifica se a bolinha saiu do layout 2
                             var ballLeft = parseInt(someBallInBoard2.style.left);
@@ -328,26 +329,28 @@
 
                             try {
 
+                              //se esta no board 2 e saiu
+
                                 if ((someBallInBoard2.parentNode.id == "board2") && (ballLeft < 0)) {
                                     gameLibs.MovColis.deleteObject(someBallInBoard2.id, "board2");
                                     totalBalls--;
-                                } //se esta no board 2 e saiu
+                                }
 
                             } catch (err) {}
 
-                        } //se o objeto obtido nao é nulo
+                        } //fim: se o objeto obtido nao é nulo
 
-                    } //for que passa pelos números possiveis de bolinhas
+                    } //fim: for que passa pelos números possiveis de bolinhas
 
-                } //verifica se existem bolinhas
+                } //fim: verifica se existem bolinhas
 
                 lastUpdate = new Date().getTime();
                 requestAnimationFrame(gameLoop); // chama o loop novamente (cria a recursividade do gameloop)
 
-            } //fim playing
+            } //fim: playing
 
 
-        } //fim do game loop
+        } //fim: game loop
 
         //Chama o gameloop pela primeira vez
         gameLoop();
@@ -360,7 +363,7 @@
 
             if (gameProperties.nivelAtual <= gameProperties.qtdeNiveis) {
 
-                //muda a piramide de posição (porcentagem randomica)
+                //muda a pirâmide de posição (porcentagem randômica)
                 var max = 95,
                     min = 5,
                     intInterval = Math.floor(Math.random() * (max - min + 1) + min);
@@ -380,13 +383,7 @@
                 } //fim do for que exclui todas as bolinhas
                 //recria bolinhas - aproveita a 'verificação mobile' e dá um incremento de velocidade de acordo
                 gameLibs.MovColis.createDOMElements(gameProperties.qtdeBolinhas, "div", "bolinha", "objeto bolinhas", "vertical", "down", "board1", 1);
-                if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
-                    gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
-                    gameProperties.velocidadeBolinhas += 7;
-                } else {
-                    gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
-                    gameProperties.velocidadeBolinhas += 4;
-                }
+                defineBolinhas();
                 gameLibs.MovColis.spreadInX("bolinhas", gameProperties.spreadYPercentage, "board1", gameProperties.spreadWithinPercentage);
 
                 //dá um reset nas variáveis que controlam as bolinhas
@@ -395,9 +392,8 @@
                 playingBall = document.getElementById("bolinha" + ballIndex);
                 playingBall.movement = gameLibs.MovColis.keepMoving;
 
-
-
-                gameProperties.velocidadePlayer += 10;
+                //aumenta a velocidade do player pra acompanhar as bolinhas que estarão cada vez mais rápidas
+                gameProperties.velocidadePlayer += 7;
 
                 //atualiza a interface
                 levels.innerHTML = "Fase " + gameProperties.nivelAtual + "/" + gameProperties.qtdeNiveis;
@@ -430,7 +426,10 @@
     var endGame = function() {
         gameOver.play();
         levels.innerHTML += " - FIM DE JOGO";
-        score.innerHTML = "Aperte F5";
+        score.innerHTML = "Reiniciar (F5)";
+        score.onclick = function() {
+            location.reload();
+        }
 
     }
 
@@ -441,8 +440,8 @@
 
         //redefinindo a largura da borda
         gameLibs.MovColis.paintBorders("board", "red", 1);
-        //redefinindo o tamanho das bolinhas
-        gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+        //redefinindo bolinhas
+        defineBolinhas();
         //redefinindo o tamanho da pyramid
         gameLibs.MovColis.paintPyramid("pyramid1", "yellow", "blue", "red", "gray", 5);
         //reajusta posições relativas
@@ -455,7 +454,7 @@
 
     window.onresize = function() {
 
-        //resolvendo o tamanho do layout
+        //resolvendo o tamanho do layout com uma outra lib
         gameLibs.LayoutResolver.adjust("layout", gameProperties.layoutWidth, gameProperties.layoutHeight);
 
         //redesenhando objetos - precisa redesenhar com delay porque ao maximizar e minimizar no botão, o resize ocorre muito rapido
