@@ -1,7 +1,7 @@
 /*Moving and Collision Library by Renato Lins*/
 
 /*
-Names considered for scope:
+- Names considered for scope:
 var: defines private stuf
 prototype: define public static stuff
 this: define public and instance stuff
@@ -37,10 +37,10 @@ var MovColis = function() { //library starts with a standard constructor ( in th
             obj.style.left = x + "px";
         },
         getWidth = function(obj) {
-            return (obj.clientWidth)
+            return (obj.width || obj.clientWidth)
         },
         getHeight = function(obj) {
-            return (obj.clientHeight)
+            return (obj.height || obj.clientHeight)
         };
 
     //redefine positions percentage. will happen ONLY when objects move for repositioning purposes
@@ -130,7 +130,7 @@ var MovColis = function() { //library starts with a standard constructor ( in th
 
 
     //defines squares - will create elements appearance based on a class
-    //this is library/class function that will be always available
+    //this is a function that will be always available
     MovColis.prototype.defineSquareByClass = function(className, widthPercentage) {
 
         var collection = document.getElementsByClassName(className);
@@ -143,8 +143,11 @@ var MovColis = function() { //library starts with a standard constructor ( in th
 
     //defines an object's position
     this.positionByPercentage = function(objId, layoutId, typeOfAdjustment) {
+        var obj = document.getElementById(objId);
+        if (obj == null) {
+            return false;
+        }
         var layout = document.getElementById(layoutId),
-            obj = document.getElementById(objId),
             xPercentage = obj.xPercentage,
             yPercentage = obj.yPercentage,
             maxWidth = getWidth(layout),
@@ -160,8 +163,9 @@ var MovColis = function() { //library starts with a standard constructor ( in th
         setY(obj, newObjectY);
 
         //left adjustment created for the pyramid object. You may Change to obj.style.width for other kinds of objects
-        if (typeOfAdjustment === "left")
+        if (typeOfAdjustment === "left") {
             obj.style.left = parseInt(obj.style.left) - (parseInt(obj.style.borderBottom) / 2) + "px";
+        }
     }
 
     //a class function to create DOM elements according to some params
@@ -202,11 +206,15 @@ var MovColis = function() { //library starts with a standard constructor ( in th
 
     }
 
-    //arbritary element draw(For Inspiration on drawing CSS shapes)
+    //The pyramid drawing
     MovColis.prototype.paintPyramid = function(pyramidID, color1, color2, color3, color4, percentage) {
 
         var widthPercentage = (parseInt(window.getComputedStyle(board2, null).getPropertyValue("width")) / 100) * percentage, //<-5% of board2 size
             pyramid = document.getElementById(pyramidID);
+
+        //this is a percentage but can also be used to measure element's as it is css created and wont have clientWidth or clientHeight properties
+        pyramid.width = widthPercentage * 2;
+        pyramid.height = widthPercentage * 2;
 
         //borders will define object's fill
         pyramid.style.borderTop = String(widthPercentage) + "px solid " + color1;
@@ -259,8 +267,12 @@ var MovColis = function() { //library starts with a standard constructor ( in th
 
     //Deleting Objects
     MovColis.prototype.deleteObject = function(objId, layoutId) {
-        var obj = document.getElementById(objId),
-            layout = document.getElementById(layoutId);
+        var obj = document.getElementById(objId);
+        if (obj == null) {
+            return false;
+        }
+
+        var layout = document.getElementById(layoutId);
         delete this.gameObjects[obj.id]; //removes from game objects namespace
         layout.removeChild(obj); //removes from the DOM tree
     }
@@ -286,7 +298,9 @@ var MovColis = function() { //library starts with a standard constructor ( in th
 
         //will detect collision only for objects within the same board
         try {
-            if (obj1.parentNode.id != obj2.parentNode.id) return false;
+            if (obj1.parentNode.id != obj2.parentNode.id) {
+                return false
+            }
         } catch (err) {}
 
         //getting first object's coordinates
@@ -300,8 +314,6 @@ var MovColis = function() { //library starts with a standard constructor ( in th
             y1obj2 = parseInt(getY(obj2)) + offsetY,
             x2obj2 = x1obj2 + getWidth(obj2) + offsetX,
             y2obj2 = y1obj2 + getHeight(obj2) + offsetY;
-
-
 
         //box collision - considering that obj2 (ball) is smaller than player
         if ((x2obj2 >= x1obj1) && (x1obj2 <= x2obj1) && (y2obj2 >= y1obj1) && (y1obj2 <= y2obj1))

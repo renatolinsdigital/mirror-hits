@@ -18,7 +18,7 @@
         layoutHeight: 768,
         //variáveis do jogo
         playing: true,
-        qtdeBolinhas: 5,
+        qtdeBolinhas: 25,
         velocidadeBolinhas: 100,
         qtdeNiveis: 100,
         velocidadePlayer: 600,
@@ -42,6 +42,15 @@
         }
     }
     setMaxScore(0);
+
+    // 4 - Exibe ou esconde o player conforme o dispositivo (apenas verifica o tamanho da tela)
+    var exibeEscondePlayer = function() {
+        if ((window.innerWidth < 1024)) {
+            gameLibs.MovColis.deleteObject(player1.id, "board1");
+        } else {
+            criaPlayer(1);
+        }
+    }
 
     /*=============Carregamento do Audio================*/
 
@@ -85,10 +94,24 @@
         beatGame.volume = 0.2;
     }
 
+    //cria o player - no caso iremos trabalhar apenas com player 1 e o índice entra apenas como uma ideia de upgrade
+    var criaPlayer = function(indice) {
+        if (gameLibs.MovColis.gameObjects.player1 != undefined) {
+            return false;
+        }
+        //cria o player
+        gameLibs.MovColis.createDOMElements(1, "div", "player", "objeto players", "none", "none", "board1", indice);
+        //definindo posição inicial e comportamento do PLAYER
+        player1.xPercentage = 50; //fara com que o objeto inicie no meio da tela
+        player1.yPercentage = 90; //fara com que o objeto inicie na parte inferior da tela
+        gameLibs.MovColis.positionByPercentage("player1", "board1", "none");
+        player1.movement = gameLibs.MovColis.arrowMove; //MÁGICA: Injeta Função/Comportamento de movimentação no player
+        player1.moveLimit = gameLibs.MovColis.boundToLayout; //injeta detecção de limites
+    }
+
     /*========Funções Principais - Após o Carregamento do DOM========*/
 
     document.addEventListener("DOMContentLoaded", function(event) {
-
 
         //----- 1 - Inicialização do Layout -----
 
@@ -114,15 +137,16 @@
             window.location.href = "index.html";
         }
 
+        //cria o player 1 - Se for mobile, será destruído imediatamente
+        criaPlayer(1);
+        exibeEscondePlayer();
+
         //---- 2 - Inicialização de Objetos -----
 
         // 2.a - Cria Cada objeto
 
         //cria bolinhas dinamicamente (qtde, tipo, nome raiz, classe(s), direcao, sentido, layout)
         gameLibs.MovColis.createDOMElements(gameProperties.qtdeBolinhas, "div", "bolinha", "objeto bolinhas", "vertical", "down", "board1", 1);
-
-        //cria o player
-        gameLibs.MovColis.createDOMElements(1, "div", "player", "objeto players", "none", "none", "board1", 1);
 
         //pyramid - utiliza uma função arbritária pra pintar um objeto através de propriedades css
         gameLibs.MovColis.createDOMElements(1, "div", "pyramid", "objeto pyramids", "none", "none", "board2", 1);
@@ -133,17 +157,16 @@
 
         //2.b - define posição e comportamento dos objetos
 
-        //definindo posição inicial e comportamento do PLAYER
-        player1.xPercentage = 50; //fara com que o objeto inicie no meio da tela
-        player1.yPercentage = 90; //fara com que o objeto inicie na parte inferior da tela
-        gameLibs.MovColis.positionByPercentage("player1", "board1", "none");
-        player1.movement = gameLibs.MovColis.arrowMove; //MÁGICA: Injeta Função/Comportamento de movimentação no player
-        player1.moveLimit = gameLibs.MovColis.boundToLayout; //injeta detecção de limites
-
         pyramid1.moveLimit = gameLibs.MovColis.boundToLayout; //garante que o objeto nunca sairá do layout
 
-        //define tamanho da div - todos os elementos da classa BOLINHA terão 8% de largura e serão quadrados
-        gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+        //define tamanho da div - todos os elementos da classe BOLINHA terão 8% de largura e serão quadrados.
+        //na versão mobile(onde não existe o player), as bolinhas serão maiores.
+
+        if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
+            gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+        } else {
+            gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
+        }
 
         //espalhando bolinhas no topo do layout
         //parâmetros: classe dos elementos que serão espalhados, porcentagem no topo, layout, porcentagem de uso
@@ -168,7 +191,15 @@
         //getting the delta time value (difference in time between the last update and now - miliseconds)
         var t, dt;
 
+        //variável que controla a colisão da paleta com as bolinhas, ou do clique nelas
+        var colidiu1 = false;
+
+
         ballLaunch.play(); //som da primeira bolinha sendo disparada (antes do gameloop)
+
+        playingBall.onclick = function() {
+            colidiu1 = true;
+        }
 
         var gameLoop = function() {
 
@@ -186,29 +217,30 @@
 
                 playingBall.movement = gameLibs.MovColis.keepMoving;
 
-
                 //processamento de entradas (funções do player)
-                /*chamando funções injetadas anteriormente - Aqui é hora de passar os
-                parametros já que a função será executada em cima do próprio player considerando o layout*/
+                //chamando funções injetadas anteriormente - Aqui é hora de passar os
+                //parametros já que a função será executada em cima do próprio player considerando o layout
                 player1.movement("board1", dt, gameProperties.velocidadePlayer); //considera uma velocidade padrão que se mantém fixa com ajuda do dt
                 player1.moveLimit("board1");
 
                 //Dá movimento a primeira bolinha (a quinta) conforme sua direção e sentido.
                 playingBall.movement(dt, gameProperties.velocidadeBolinhas);
 
-
                 //processa o movimento de todas as bolinhas que estão no board 2
                 //o comportamento é injetado durante outras ocasiões [colisão com player ou ao sair do layout], porém é processado sempre pelo gameloop)
                 for (var i = 1; i <= gameProperties.qtdeBolinhas; i++) {
                     var someBallInBoard2 = document.getElementById("bolinha" + i);
                     if (someBallInBoard2 != null) { //verifica se há uma bolinha com esse indice provavel
-                        if (someBallInBoard2.parentNode.id == "board2") someBallInBoard2.movement(dt, gameProperties.velocidadeBolinhas);
+                        if (someBallInBoard2.parentNode.id == "board2") {
+                            someBallInBoard2.movement(dt, gameProperties.velocidadeBolinhas)
+                        }
                     }
                 }
 
-                //detecta colisão. Essa detecção ocorre no board 1
-                var colidiu1 = gameLibs.MovColis.detectCollision(player1, playingBall, 0, 0);
-
+                //detecta colisão com a paleta. Essa detecção ocorre no board 1 e somente se a paleta existir
+                if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
+                    colidiu1 = gameLibs.MovColis.detectCollision(player1, playingBall, 0, 0);
+                }
 
                 //enquanto houverem bolinhas suspensas iremos destruir a que está caindo e chamar a próxima
                 if (ballIndex >= 1) {
@@ -221,8 +253,12 @@
                         //destroi bolinha atual e pega a próxima(que no caso é a anterior)
                         gameLibs.MovColis.deleteObject(playingBall.id, "board1");
                         ballIndex--; //de qualquer forma o board1 terá uma bolinha a menos
-                        if (ballIndex >= 1) playingBall = document.getElementById("bolinha" + ballIndex);
-
+                        if (ballIndex >= 1) {
+                            playingBall = document.getElementById("bolinha" + ballIndex);
+                            playingBall.onclick = function() {
+                                colidiu1 = true;
+                            }
+                        }
 
                         //caso tenha sido uma colisão entra player e bolinha, uma bolinha é criada no board 2 e se moverá na horizontal
                         if (colidiu1) {
@@ -232,8 +268,12 @@
 
                             //define a bolinha que foi criada do outro lado e ajusta sua posição
                             var ballInTheOtherSide = document.getElementById("bolinha" + parseInt(ballIndex + 1));
-                            //relembra a definição visual das bolinhas
-                            gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+                            //reconstroi a definição visual das bolinhas
+                            if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
+                                gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+                            } else {
+                                gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
+                            }
 
                             //ajusta percentualmente a posição da nova bolinha
                             ballInTheOtherSide.xPercentage = 100; //encostada no final do board2
@@ -245,7 +285,10 @@
                             //injeta o movimento continuo na bolinha que passou pro outro lado
                             ballInTheOtherSide.movement = gameLibs.MovColis.keepMoving;
 
+                            colidiu1 = false;
+
                         } // se colidiu1
+
 
                         if (totalBalls >= 1) ballLaunch.play(); //executa som ao chamar a próxima bolinha
 
@@ -262,7 +305,7 @@
                         if (someBallInBoard2 != null) {
 
                             //--Verifica se o player acertou a piramide
-                            var colidiu2 = gameLibs.MovColis.detectCollision(someBallInBoard2, pyramid1, 10, 10); //detecta colisão com um offset
+                            var colidiu2 = gameLibs.MovColis.detectCollision(someBallInBoard2, pyramid1, 0, 0); //detecta colisão com um offset
                             if (colidiu2) {
 
                                 pyramidHit.play();
@@ -298,11 +341,10 @@
 
                 } //verifica se existem bolinhas
 
-
                 lastUpdate = new Date().getTime();
                 requestAnimationFrame(gameLoop); // chama o loop novamente (cria a recursividade do gameloop)
 
-            } // se playing
+            } //fim playing
 
 
         } //fim do game loop
@@ -338,13 +380,17 @@
                 } //fim do for que exclui todas as bolinhas
                 //recria bolinhas
                 gameLibs.MovColis.createDOMElements(gameProperties.qtdeBolinhas, "div", "bolinha", "objeto bolinhas", "vertical", "down", "board1", 1);
-                gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+                if (gameLibs.MovColis.gameObjects.player1 !== undefined) {
+                    gameLibs.MovColis.defineSquareByClass("bolinhas", 8);
+                } else {
+                    gameLibs.MovColis.defineSquareByClass("bolinhas", 22);
+                }
                 gameLibs.MovColis.spreadInX("bolinhas", gameProperties.spreadYPercentage, "board1", gameProperties.spreadWithinPercentage);
 
                 //dá um reset nas variáveis que controlam as bolinhas
-                totalBalls = gameProperties.qtdeBolinhas,
-                    ballIndex = totalBalls,
-                    playingBall = document.getElementById("bolinha" + ballIndex);
+                totalBalls = gameProperties.qtdeBolinhas;
+                ballIndex = totalBalls;
+                playingBall = document.getElementById("bolinha" + ballIndex);
                 playingBall.movement = gameLibs.MovColis.keepMoving;
 
                 //aumenta a velocidade das bolinhas
@@ -354,6 +400,10 @@
 
                 //atualiza a interface
                 levels.innerHTML = "Fase " + gameProperties.nivelAtual + "/" + gameProperties.qtdeNiveis;
+
+                playingBall.onclick = function() {
+                    colidiu1 = true;
+                }
 
                 gameLoop();
 
@@ -378,7 +428,7 @@
 
     var endGame = function() {
         gameOver.play();
-        levels.innerHTML = "FIM DE JOGO";
+        levels.innerHTML += " - FIM DE JOGO";
         score.innerHTML = "Aperte F5";
 
     }
@@ -407,8 +457,10 @@
         //resolvendo o tamanho do layout
         gameLibs.LayoutResolver.adjust("layout", gameProperties.layoutWidth, gameProperties.layoutHeight);
 
-        //deresenhando objetos - precisa redesenhar com delay porque ao maximizar e minimizar no botão, o resize ocorre muito rapido
+        //redesenhando objetos - precisa redesenhar com delay porque ao maximizar e minimizar no botão, o resize ocorre muito rapido
         setTimeout(reDrawObjects, 10);
+
+        exibeEscondePlayer();
 
     }
 
