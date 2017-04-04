@@ -8,7 +8,7 @@ O objetivo do jogo é acertar o artefato colorido no quadro direito, considerand
 
 Versões:
 
-1.0: Criado em 2015 como um dos trabalhos a serem entregues no curso técnico de programação de jogos digitais. 
+1.0: Criado em 2015 como um dos trabalhos a serem entregues no curso técnico de programação de jogos digitais.<br>
 1.1: Atualizado em 2017 com ajustes nas mensagens, adaptações responsivas e revisão da dificuldade.
 
 Para jogar acesse: https://renatolinsdigital.github.io/mirror-hits/index.html
