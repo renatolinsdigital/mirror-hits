@@ -1,16 +1,17 @@
 # Mirror Hits
 
-Um mini-game com estilo old school que exercita o reflexo e a visão espacial.
+An old school mini-game with the idea of a portal, good for practicing reflexes.
 
-Para jogar acesse: https://renatolinsdigital.github.io/mirror-hits/index.html
+Demo: https://renatolinsdigital.github.io/mirror-hits/index.html
 
-O objetivo do jogo é acertar o artefato colorido no quadro direito, considerando que toda vez que acertar uma bolinha esta será transportada para o lado direito com um movimento horizontal. São 100 níveis de dificuldade, cada um com uma velocidade própria que vai aumentando progressivamente conforme se avança no jogo. Esquema:
+## How to play
 
-![Esquema de funcionamento do jogo](schema.png?raw=true "Esquema do Mirror Hits")
+Use keyboard controls to move the blue board around. Once it hits any falling ball, it will be horizontally teleported to the right side. Once the ball hits that colored object, you score and go to the next level.
 
-Versões:
 
-1.0: Criado em 2015 como um dos trabalhos a serem entregues no curso técnico de programação de jogos digitais.<br>
-1.1: Atualizado em 2017 com ajustes nas mensagens, adaptações responsivas e revisão da dificuldade.
+Game Schema:
+
+![Game Schema](schema.png?raw=true "Mirror Hits")
+
 
 
