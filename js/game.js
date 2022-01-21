@@ -366,8 +366,8 @@
 
     var endGame = function() {
         gameOver.play();
-        levels.innerHTML += " - FIM DE JOGO";
-        score.innerHTML = "Reiniciar (F5)";
+        levels.innerHTML += " - GAME OVER";
+        score.innerHTML = "Restart (F5)";
         score.onclick = function() {
             location.reload();
         }
