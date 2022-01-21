@@ -22,30 +22,30 @@ if (canPlayOgg){
 }
 
 //começa o jogo ao clicar no play
-var playAgain = document.getElementById("playagain");
+var playAgain = document.getElementById("play-again");
 playAgain.onclick = function(){
 startSound.play();
-setTimeout(function(){window.location.href = "game.html";}, 400); //chama o jogo após meio segundo
+setTimeout(function(){window.location.href = "game.html";}, 400); 
 	
 }
 
 //getting saved max score
-var maxScore = localStorage["maxscore"],
-    maxScoreText = document.getElementById("maxscoretext");
-maxScoreText.innerHTML = "Pontuação Máxima: " + maxScore;
+var maxScore = localStorage["max_score"],
+    maxScoreText = document.getElementById("max-score-text");
+maxScoreText.innerHTML = "Max score: " + maxScore;
 
 //responsive layout
-var layoutObject = document.getElementById("layoutcomplete"),
+    var layoutObject = document.getElementById("layout-complete "),
 largura = 1024,
 altura = 768;
 layoutObject.style.width = largura + "px";
 layoutObject.style.height = altura + "px";
 var lr = new LayoutResolver();
-lr.adjust("layoutcomplete", 1024, 768);
+    lr.adjust("layout-complete ", 1024, 768);
 
 window.onresize = function(){
 
-lr.adjust("layoutcomplete", largura, altura);
+    lr.adjust("layout-complete ", largura, altura);
 
 }
 

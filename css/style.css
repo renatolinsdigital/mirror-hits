@@ -1,4 +1,4 @@
-/*----reset----*/
+/*---- Reset ----*/
 
 * {
     margin: 0;
@@ -17,18 +17,53 @@
 }
 
 body, html {
+    font-size: 16px;
     background-color: black;
     font-family: "Trebuchet MS";
     color: white;
 }
 
+/*---- Theme ----*/
+
 p {
     color: white;
-    /*texto do credito*/
 }
 
+button {
+    font-size: 2.2rem;
+    padding: 2%;
+    cursor: pointer;
+    background: white;
+    display: block;
+    margin: auto;
+    margin-bottom: 1.5vmin;
+    margin-top: 1vmin;
+    width: 40%;
+    border-radius: 4px;
+    transition: all .2s ease;
+}
 
-/*----posicionamento----*/
+button:hover {
+    background-color: #ccc;
+}
+
+a:link, a:visited {
+    color: white;
+}
+
+a:hover, a:active {
+    color: #eee;
+}
+
+/*---- Game UI elements ----*/
+
+#menu-text {
+    cursor: pointer;
+}
+
+#top-container p {
+    font-size: 1.6rem;
+}
 
 .bolinhas {
     display: inline-block;
@@ -68,49 +103,22 @@ p {
     height: 85%;
 }
 
-#layout, #layoutcomplete, #mainmenu {
+#layout, #layout-complete, #main-menu {
     position: relative;
     overflow: hidden;
     text-align: center;
     background: #0a0a0a;
 }
 
-#gamename {
-    font-size: 10vmin;
+#game-name {
+    font-size: 6rem;
 }
 
-#play, #resetmaxscore {
-    padding: 2%;
-    font-size: 4vmin;
-    cursor: pointer;
-    background: white;
-    display: block;
-    margin: auto;
-    margin-bottom: 1.5vmin;
-    margin-top: 1vmin;
-    width: 40%;
-}
-
-#resetmaxscore {
-    font-size: 3.5vmin;
-    padding-top: 3%;
-    padding-bottom: 3%;
-}
-
-#playagain {
-    padding: 2%;
-    margin: 3%;
-    font-size: 30px;
-    font-size: 5.5vmin;
-    cursor: pointer;
-    background: white;
-}
-
-#mainmenu {
+#main-menu {
     padding-top: 4%;
 }
 
-#author, #maxscoredisplay {
+#author, #max-score-display {
     font-size: 15px;
     font-size: 2.5vmin;
     display: block;
@@ -118,7 +126,7 @@ p {
     margin-bottom: 0.8%;
 }
 
-#maxscoredisplay {
+#max-score-display {
     font-size: 4.0vmin;
 }
 
@@ -136,7 +144,7 @@ p {
     width: 18%;
 }
 
-#layoutcomplete {
+#layout-complete {
     text-align: center;
     padding: 7%;
     font-family: "Trebuchet MS";
@@ -163,26 +171,15 @@ p {
     left: 51%;
 }
 
-#top {
-    display: block;
-    float: left;
-    width: 100%;
-    height: 10%;
-}
-
 #menu, #levels, #score {
     display: inline-block;
     float: left;
     height: 100%;
-    width: 33.333333%;
+    width: calc(100% / 3);
     text-align: center;
     padding: 2%;
     font-size: 30px;
     font-size: 4.8vmin;
-}
-
-#menutext {
-    cursor: pointer;
 }
 
 #credits {
@@ -193,14 +190,6 @@ p {
     text-align: center;
     padding-top: 0.5%;
     font-size: 1.7vmin;
-}
-
-a:link, a:visited {
-    color: white;
-}
-
-a:hover, a:active {
-    color: #ccc;
 }
 
 #menu, #levels, #score {

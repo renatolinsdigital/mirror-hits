@@ -3,7 +3,7 @@
 
     //-------- Audio ---------
 
-    // verifica formatos suportados
+    // checks supported audio
     function supportsOgg() {
         var a = document.createElement('audio');
         return !!(a.canPlayType && a.canPlayType('audio/ogg;').replace(/no/, ''));
@@ -25,25 +25,25 @@
 
     // ------ Layout -------
 
-    var layoutObject = document.getElementById("mainmenu"),
+    var layoutObject = document.getElementById("main-menu"),
         largura = 1024,
         altura = 768;
     layoutObject.style.width = largura + "px";
     layoutObject.style.height = altura + "px";
     var lr = new LayoutResolver();
-    lr.adjust("mainmenu", 1024, 768);
+    lr.adjust("main-menu", 1024, 768);
 
-    //----- Carregamento do DOM -----
+    //----- DOM Loading -----
 
     document.addEventListener("DOMContentLoaded", function(event) {
 
-        //--- relembrando a pontuação máxima ---
+        //--- showing max score---
 
-        var maxScoreDisplay = document.getElementById("maxscoredisplay");
+        var maxScoreDisplay = document.getElementById("max-score-display");
 
-        if (localStorage["maxscore"] == undefined) localStorage["maxscore"] = 0;
+        if (localStorage["max_score"] == undefined) localStorage["max_score"] = 0;
 
-        maxScoreDisplay.innerHTML = "Pontuação Máxima: " + localStorage["maxscore"];
+        maxScoreDisplay.innerHTML = "Max score: " + localStorage["max_score"];
 
         //------- Botões de Interface -------
 
@@ -53,20 +53,20 @@
             startSound.play();
             setTimeout(function() {
                 window.location.href = "game.html";
-            }, 400); //chama o jogo após meio segundo
+            }, 400);
         }
 
-        //reseta a pontuação máxima
-        var resetMaxScore = document.getElementById("resetmaxscore");
+        //reseting max score
+        var resetMaxScore = document.getElementById("reset-max-score");
         resetMaxScore.onclick = function() {
-            localStorage["maxscore"] = 0;
-            maxScoreDisplay.innerHTML = "Pontuação Máxima: 0";
+            localStorage["max_score"] = 0;
+            maxScoreDisplay.innerHTML = "Max score: 0";
         }
 
     });
 
     window.onresize = function() {
-        lr.adjust("mainmenu", largura, altura);
+        lr.adjust("main-menu", largura, altura);
     }
 
 })();
