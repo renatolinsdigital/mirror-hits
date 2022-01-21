@@ -11,9 +11,13 @@ Ps. This project is many years old and doesn't represent the way I code nowadays
 Use keyboard controls to move the blue board around. Once it hits any falling ball, it will be horizontally teleported to the right side. Once the ball hits that colored object, you score and go to the next level.
 
 
-Game Schema:
+Game Schema (prototype):
 
-![Game Schema](schema.png?raw=true "Mirror Hits")
+![Prototype](schema.png?raw=true "Prototype")
+
+Game print:
+
+![Print](print.png?raw=true "Print")
 
 
 
